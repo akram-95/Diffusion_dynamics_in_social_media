@@ -20,3 +20,13 @@ def detect_topics(request: Request):
     api_service = services.ApiService()
     return JsonResponse(api_service.getTopicDetectionResult(input=request.data['input']),
                         status=status.HTTP_200_OK, safe=False)
+
+
+@api_view(['POST'])
+def detect_topics_bertopic(request: Request):
+    if not ("input" in request.data.keys()):
+        return JsonResponse({'message': 'body with key input is missed'}, status=status.HTTP_400_BAD_REQUEST,
+                            safe=False)
+    api_service = services.ApiService()
+    return JsonResponse(api_service.get_topic_detection_by_bertopic(input=request.data['input']),
+                        status=status.HTTP_200_OK, safe=False)
