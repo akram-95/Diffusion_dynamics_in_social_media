@@ -1,0 +1,421 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+                <link href="lib/tom-select/tom-select.css" rel="stylesheet">
+                <script src="lib/tom-select/tom-select.complete.min.js"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 750px;
+                 background-color: #222222;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 750px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+              <div id="filter-menu" class="card-header">
+                <div class="row no-gutters">
+                  <div class="col-3 pb-2">
+                    <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="updateFilter(value, 'item')"
+                            id="select-item"
+                        >
+                        <option value="">Select a network item</option>
+                        <option value="edge">edge</option>
+                        <option value="node">node</option>
+                    </select>
+                  </div>
+                  <div class="col-3 pb-2">
+                    <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="updateFilter(value, 'property')"
+                            id="select-property"
+                        >
+                        <option value="">Select a property...</option>
+                    </select>
+                  </div>
+                  <div class="col-3 pb-2">
+                    <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            id="select-value"
+                        >
+                        <option value="">Select value(s)...</option>
+                    </select>
+                  </div>
+                  <div class="col-1 pb-2">
+                    <button type="button" class="btn btn-primary btn-block" onclick="highlightFilter(filter);">Filter</button>
+                  </div>
+                  <div class="col-2 pb-2">
+                    <button type="button" class="btn btn-primary btn-block" onclick="clearFilter(true)">Reset Selection</button>
+                  </div>
+                </div>
+              </div>
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+                  // explicitly using onItemAdd and this function as we need to save multiple values
+                  let updateValueFilter = function() {
+                      return function () {
+                      filter['value'].push(arguments[0])
+                      }
+                  }
+
+                  let valueControl = new TomSelect("#select-value",{
+                      maxItems: null,
+                      valueField: 'id',
+                      labelField: 'title',
+                      searchField: 'title',
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      },
+                      onItemAdd: updateValueFilter()
+                  });
+
+                  let addValues = function() {
+                      return function () {
+                          // clear the current value options and add the selected attribute values
+                          // tom-select handles duplicates
+                          let selectedProperty = arguments[0];
+                          valueControl.clear();
+                          valueControl.clearOptions();
+                          filter['value'] = []
+                          if (filter['item'] === 'node') {
+                              for (let each in allNodes) {
+                                  valueControl.addOption({
+                                      id:allNodes[each][selectedProperty],
+                                      title:allNodes[each][selectedProperty]
+                                  })
+                              }
+                          }
+                          else if (filter['item'] === 'edge') {
+                              for (let each in allEdges) {
+                                  valueControl.addOption({
+                                      id:allEdges[each][selectedProperty],
+                                      title:allEdges[each][selectedProperty]
+                                  })
+                              }
+                          }
+                      }
+                  };
+
+                  let propControl = new TomSelect("#select-property",{
+                      valueField: 'id',
+                      labelField: 'title',
+                      searchField: 'title',
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      },
+                      onItemAdd: addValues()
+                  });
+
+                  let addProperties = function() {
+                      return function () {
+                          // loops through the selected network item and adds the attributes to dropdown
+                          // tom-select handles duplicates
+                          clearFilter(false)
+                          if (arguments[0] === 'edge') {
+                              for (let each in allEdges) {
+                                  if (allEdges.hasOwnProperty(each)) {
+                                      for (let eachProp in allEdges[each]) {
+                                          if (allEdges[each].hasOwnProperty(eachProp)) {
+                                              propControl.addOption({id: eachProp, title: eachProp})
+                                          }
+                                      }
+                                  }
+                              }
+                          }
+                          else if (arguments[0] === 'node') {
+                              for (let each in allNodes) {
+                                  if (allNodes.hasOwnProperty(each)) {
+                                      for (let eachProp in allNodes[each]) {
+                                          if (allNodes[each].hasOwnProperty(eachProp)
+                                              && (eachProp !== 'hidden' && eachProp !== 'savedLabel'
+                                                  && eachProp !== 'hiddenLabel')) {
+                                              propControl.addOption({id: eachProp, title: eachProp})
+
+                                          }
+                                      }
+                                  }
+                              }
+                          }
+                      }
+                  };
+
+                  let itemControl = new TomSelect("#select-item",{
+                      create: false,
+                      sortField:{
+                          field: "text",
+                          direction: "asc"
+                      },
+                      onItemAdd: addProperties()
+                  });
+
+                  function clearFilter(reset) {
+                      // utility function to clear all the selected filter options
+                      // if reset is set to true, the existing filter will be removed
+                      // else, only the dropdown options are cleared
+                      propControl.clear();
+                      propControl.clearOptions();
+                      valueControl.clear();
+                      valueControl.clearOptions();
+                      filter = {
+                          item : '',
+                          property : '',
+                          value : []
+                      }
+                      if (reset) {
+                          itemControl.clear();
+                          filterHighlight({nodes: []})
+                      }
+                  }
+
+                  function updateFilter(value, key) {
+                      // key could be 'item' or 'property' and value is as selected in dropdown
+                      filter[key] = value
+                  }
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "font": {"color": "white"}, "id": "ukraine putin war russia russian ukrainian nato aggression war ukraine ukrainians", "label": "ukraine putin war russia russian ukrainian nato aggression war ukraine ukrainians", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "vaccination vaccine corona vaccinated pandemic health requirement covid unvaccinated infection", "label": "vaccination vaccine corona vaccinated pandemic health requirement covid unvaccinated infection", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "unk unk unk unk thank unk good congratulations unk congratulations good thank thank unk birthday", "label": "unk unk unk unk thank unk good congratulations unk congratulations good thank thank unk birthday", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "climate climate protection protection climate change change climate crisis crisis climate policy climate activists justice", "label": "climate climate protection protection climate change change climate crisis crisis climate policy climate activists justice", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "germany german east immigration germans migration country east germany citizenship people", "label": "germany german east immigration germans migration country east germany citizenship people", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "children child school education poverty parents teachers childcare schools allowance", "label": "children child school education poverty parents teachers childcare schools allowance", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "cdu csu cdu csu party afd merz conservative fdp vote union", "label": "cdu csu cdu csu party afd merz conservative fdp vote union", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "animal agriculture farmers forest food agricultural biodiversity meat forests species", "label": "animal agriculture farmers forest food agricultural biodiversity meat forests species", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "law rule law police rule freedom expression expression constitution criminal proceedings freedom", "label": "law rule law police rule freedom expression expression constitution criminal proceedings freedom", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "greens green red red green spd black left black green party want", "label": "greens green red red green spd black left black green party want", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "party left wing right wing left wing right parties extremists extremism democracy", "label": "party left wing right wing left wing right parties extremists extremism democracy", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "congratulations election chairman thank forward look forward elected congratulations election board new", "label": "congratulations election chairman thank forward look forward elected congratulations election board new", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweet twitter tweets facebook read tweeted social media like delete deleted", "label": "tweet twitter tweets facebook read tweeted social media like delete deleted", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "european europe european parliament parliament eu european union union council parliament council unk", "label": "european europe european parliament parliament eu european union union council parliament council unk", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "scholz olaf olaf scholz chancellor spd chancellor scholz cumex unk laschet federal chancellor", "label": "scholz olaf olaf scholz chancellor spd chancellor scholz cumex unk laschet federal chancellor", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "transport railway rail traffic public transport railways train road cars trains", "label": "transport railway rail traffic public transport railways train road cars trains", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "women gender feminist women day men equality day woman feminist foreign women rights", "label": "women gender feminist women day men equality day woman feminist foreign women rights", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "concert exhibition great today bremen berlin museum wonderful art festival", "label": "concert exhibition great today bremen berlin museum wonderful art festival", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "berlin election city berliners office good berlin berlin berliner berlin today years", "label": "berlin election city berliners office good berlin berlin berliner berlin today years", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "good luck luck thank good best dear april news thank much luck good", "label": "good luck luck thank good best dear april news thank much luck good", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "iran iranian regime death people iran rights iranian regime freedom women death penalty", "label": "iran iranian regime death people iran rights iranian regime freedom women death penalty", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "austria austrian vienna austrians lower austria lower government neutral percent austria austria", "label": "austria austrian vienna austrians lower austria lower government neutral percent austria austria", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "energy renewable renewable energy wind transition renewables energy transition electricity solar power", "label": "energy renewable renewable energy wind transition renewables energy transition electricity solar power", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "anti semitism anti semitism israel semitic anti semitic jews jewish israeli hatred", "label": "anti semitism anti semitism israel semitic anti semitic jews jewish israeli hatred", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "commission commission shall shall adopt adopt shall adopt implementing implementing acts implementing acts decision", "label": "commission commission shall shall adopt adopt shall adopt implementing implementing acts implementing acts decision", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "unk unk unk democracy coalition unk coalition party democracy unk government coalition treaty treaty", "label": "unk unk unk democracy coalition unk coalition party democracy unk government coalition treaty treaty", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "bavaria baden w\u00fcrttemberg baden w\u00fcrttemberg ticket bavarian munich transport bridge germany ticket", "label": "bavaria baden w\u00fcrttemberg baden w\u00fcrttemberg ticket bavarian munich transport bridge germany ticket", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "asylum asylum seekers seekers migration eu borders refugees external right asylum external borders", "label": "asylum asylum seekers seekers migration eu borders refugees external right asylum external borders", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "freedom rights human human rights fundamental security individual right fundamental rights self", "label": "freedom rights human human rights fundamental security individual right fundamental rights self", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "nuclear nuclear power power energy nuclear energy power plants plants chernobyl atom renewable", "label": "nuclear nuclear power power energy nuclear energy power plants plants chernobyl atom renewable", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "war crimes war crimes peace wars military international bike cyclist must", "label": "war crimes war crimes peace wars military international bike cyclist must", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "merkel angela angela merkel chancellor mrs merkel 16 16 years mrs responsibility years", "label": "merkel angela angela merkel chancellor mrs merkel 16 16 years mrs responsibility years", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "housing rent tanks rental affordable affordable housing social housing real estate estate rents", "label": "housing rent tanks rental affordable affordable housing social housing real estate estate rents", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "sk thank citizens thanks unk let type type congratulations new today", "label": "sk thank citizens thanks unk let type type congratulations new today", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "germany germany trans germany queer self determination determination discrimination gender self homosexuality", "label": "germany germany trans germany queer self determination determination discrimination gender self homosexuality", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "nice follow know sure nice meet like see questions follow follow asshole", "label": "nice follow know sure nice meet like see questions follow follow asshole", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "china taiwan chinese port beijing unk china russia china unk dependence china must", "label": "china taiwan chinese port beijing unk china russia china unk dependence china must", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "debt tax debt brake brake taxes investment money billion new debt financial", "label": "debt tax debt brake brake taxes investment money billion new debt financial", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "afd party vote afd parties democracy right politics left wing vote", "label": "afd party vote afd parties democracy right politics left wing vote", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "energy nuclear power nuclear power germany electricity power plants plants german renewable", "label": "energy nuclear power nuclear power germany electricity power plants plants german renewable", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "woman nationalist know well left never speech like actresses alice", "label": "woman nationalist know well left never speech like actresses alice", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "epp wonderful awful going okay okay funny good time great thank great congratulations", "label": "epp wonderful awful going okay okay funny good time great thank great congratulations", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "fdp spd greens coalition union party government spd green green freedom", "label": "fdp spd greens coalition union party government spd green green freedom", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "inflation ecb money rate interest prices monetary increases progression price", "label": "inflation ecb money rate interest prices monetary increases progression price", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "resignation government faeser federal federal government resign resignations extremism crisis right", "label": "resignation government faeser federal federal government resign resignations extremism crisis right", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "victims auschwitz remember holocaust commemorate concentration memorial concentration camp semitism anti semitism", "label": "victims auschwitz remember holocaust commemorate concentration memorial concentration camp semitism anti semitism", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "budget funding unk billion aid 2023 investments million proposal financial", "label": "budget funding unk billion aid 2023 investments million proposal financial", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "habeck climate heating robert habeck robert transport energy climate protection minister habeck transport sector", "label": "habeck climate heating robert habeck robert transport energy climate protection minister habeck transport sector", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "journalism journalist journalists media quality afd quality journalism good journalism newspaper journalistic", "label": "journalism journalist journalists media quality afd quality journalism good journalism newspaper journalistic", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "ashamed thinking lucky arrogant thinkers self arrogance arguments shame argument", "label": "ashamed thinking lucky arrogant thinkers self arrogance arguments shame argument", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "gdr crisis fascist anti fascist freedom 1953 anti crises democracy meuthen", "label": "gdr crisis fascist anti fascist freedom 1953 anti crises democracy meuthen", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "going anywhere anywhere going anywhere going going get get thank going anywhere thank bashing going going participate", "label": "going anywhere anywhere going anywhere going going get get thank going anywhere thank bashing going going participate", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "article read read article understand reading article read articles hard understand quote full article", "label": "article read read article understand reading article read articles hard understand quote full article", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "chancellor old chancellor schr\u00f6der candidate chancellor chancellors federal chancellor candidate gerhard schr\u00f6der chancellor candidate gerhard", "label": "chancellor old chancellor schr\u00f6der candidate chancellor chancellors federal chancellor candidate gerhard schr\u00f6der chancellor candidate gerhard", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "sanctions oil russia embargo oil embargo sanctions russia eu russian putin eu sanctions", "label": "sanctions oil russia embargo oil embargo sanctions russia eu russian putin eu sanctions", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "eat good eggenstein interesting renovation evangelical church eggenstein good meal good good information goes", "label": "eat good eggenstein interesting renovation evangelical church eggenstein good meal good good information goes", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "efuels fuels burner technology combustion ban openness technology openness 2035 engines", "label": "efuels fuels burner technology combustion ban openness technology openness 2035 engines", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "gas russian gas russian energy russia oil dependence putin dependence russian supply", "label": "gas russian gas russian energy russia oil dependence putin dependence russian supply", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "turkey kurdish turkish erdogan kurds istanbul syria kavala attack paris", "label": "turkey kurdish turkish erdogan kurds istanbul syria kavala attack paris", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "eu european corruption law rule law parliament european parliament rule court justice eu law", "label": "eu european corruption law rule law parliament european parliament rule court justice eu law", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "lauterbach s\u00f6der karl lauterbach karl bavaria mr markus laschet mr lauterbach minister", "label": "lauterbach s\u00f6der karl lauterbach karl bavaria mr markus laschet mr lauterbach minister", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "citizens money money citizens labour unemployed social unemployment labour market people low", "label": "citizens money money citizens labour unemployed social unemployment labour market people low", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "bundestag german bundestag german president thank 20th elected congratulations member german today", "label": "bundestag german bundestag german president thank 20th elected congratulations member german today", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "commissioner thank commissioner would like ask commissioner like ask like thank commissioner report like would ask", "label": "commissioner thank commissioner would like ask commissioner like ask like thank commissioner report like would ask", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "interview whole interview interviewed whole interesting interview good interview interviews interesting read listen", "label": "interview whole interview interviewed whole interesting interview good interview interviews interesting read listen", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "coalition gerhard coalition agreement agreement gerhard schr\u00f6der schr\u00f6der coalitions partner coalition partners coalition treaty", "label": "coalition gerhard coalition agreement agreement gerhard schr\u00f6der schr\u00f6der coalitions partner coalition partners coalition treaty", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "billion euros euro million 000 100 case german german economy economy possible fact case", "label": "billion euros euro million 000 100 case german german economy economy possible fact case", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "digital digitalisation data data protection digitization digital strategy future use chip saxony", "label": "digital digitalisation data data protection digitization digital strategy future use chip saxony", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "stupid truth flag stupidity biological pornography sexes flags child pornography think", "label": "stupid truth flag stupidity biological pornography sexes flags child pornography think", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "sign signed nothing add add going going go funny whining go right", "label": "sign signed nothing add add going going go funny whining go right", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "book read reading grammatic christmas grammatic grammatic christmas tree grammar tree text", "label": "book read reading grammatic christmas grammatic grammatic christmas tree grammar tree text", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "new year year 2023 2022 year 2023 happy new new happy wish year 2022", "label": "new year year 2023 2022 year 2023 happy new new happy wish year 2022", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "girl firefighters injured condolences illerkirchberg fire family thank firefighting condolences families", "label": "girl firefighters injured condolences illerkirchberg fire family thank firefighting condolences families", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "price electricity prices electricity price gas price brake kwh energy brake brakes", "label": "price electricity prices electricity price gas price brake kwh energy brake brakes", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "merz good idea idea worth initiative good idea worth guy idea good sit", "label": "merz good idea idea worth initiative good idea worth guy idea good sit", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "parliament parliamentary members parliament member parliament parliamentarians members opposition parliaments parliamentary democracy law", "label": "parliament parliamentary members parliament member parliament parliamentarians members opposition parliaments parliamentary democracy law", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "digital orbit music tip tip digital orbit music tip bordesholm music morning bordesholm bordesholm via beautiful", "label": "digital orbit music tip tip digital orbit music tip bordesholm music morning bordesholm bordesholm via beautiful", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "vienna city vienna vienna vienna city austria climate graz city vienna go vienna hours vienna", "label": "vienna city vienna vienna vienna city austria climate graz city vienna go vienna hours vienna", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "vsv vki kremlin ak vw lawsuit association file ak vki price", "label": "vsv vki kremlin ak vw lawsuit association file ak vki price", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "immigration citizenship immigration law migration modern law citizenship law modern immigration skilled country", "label": "immigration citizenship immigration law migration modern law citizenship law modern immigration skilled country", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "election elections constituency vote electoral reform campaign federal election federal federal election", "label": "election elections constituency vote electoral reform campaign federal election federal federal election", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "congratulations dear congratulations smooth ride luck smooth smooth dear congratulate unk ride toilets excuses", "label": "congratulations dear congratulations smooth ride luck smooth smooth dear congratulate unk ride toilets excuses", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "protection workers workers rights workers rights protection rights protection directive protection directive proposal directive commission proposal", "label": "protection workers workers rights workers rights protection rights protection directive protection directive proposal directive commission proposal", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "pension pensions age insurance retirement capital pensioners fund old age pension system", "label": "pension pensions age insurance retirement capital pensioners fund old age pension system", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "violence women violence women sexual woman sexual violence domestic violence every gender disabilities", "label": "violence women violence women sexual woman sexual violence domestic violence every gender disabilities", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "fascism fascist fascists anti fascist experts anti history shown atomic history expert", "label": "fascism fascist fascists anti fascist experts anti history shown atomic history expert", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "sorry apology possible reality dumbest possible exciting live dumbest dumbest contradiction reality exciting exciting", "label": "sorry apology possible reality dumbest possible exciting live dumbest dumbest contradiction reality exciting exciting", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "minister ministers culture ministry interior prime minister prime cabinet minister interior cabinets", "label": "minister ministers culture ministry interior prime minister prime cabinet minister interior cabinets", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "christmas merry merry christmas holidays wish happy holiday christmas unk blessed christmas blessed", "label": "christmas merry merry christmas holidays wish happy holiday christmas unk blessed christmas blessed", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "problem picture portrait westerwelle pictures guido westerwelle photos guido image would turned", "label": "problem picture portrait westerwelle pictures guido westerwelle photos guido image would turned", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "bundeswehr billion special special assets 100 billion assets armed forces forces armed german armed", "label": "bundeswehr billion special special assets 100 billion assets armed forces forces armed german armed", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "qatar world cup cup fifa world cup qatar football sports games sport", "label": "qatar world cup cup fifa world cup qatar football sports games sport", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "data data protection protection storage protection authorities storage data authorities european data europol data storage", "label": "data data protection protection storage protection authorities storage data authorities european data europol data storage", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "ovp \u00f6vp sobotka oevp bmichats party sp\u00f6 oevpua n\u00f6 epp", "label": "ovp \u00f6vp sobotka oevp bmichats party sp\u00f6 oevpua n\u00f6 epp", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "vote right vote constituencies majority proportional lists representation proportional representation right voting", "label": "vote right vote constituencies majority proportional lists representation proportional representation right voting", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "mask masks wear wearing wear mask wearing mask breathe wear masks hold forbid", "label": "mask masks wear wearing wear mask wearing mask breathe wear masks hold forbid", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "omicron omikron variant delta say vaccine troll biontech booster mild", "label": "omicron omikron variant delta say vaccine troll biontech booster mild", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "co2 coal power emissions plants power plants wood coal power fossil fracking", "label": "co2 coal power emissions plants power plants wood coal power fossil fracking", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "bundestag session speech week week bundestag work bundestag thing bundestag thursday hour bundestag today", "label": "bundestag session speech week week bundestag work bundestag thing bundestag thursday hour bundestag today", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "speed speed limit limit weekend km speed limits remember nice limits great weekend", "label": "speed speed limit limit weekend km speed limits remember nice limits great weekend", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "sources claim facts evidence proof lab leak zdf source prove leak", "label": "sources claim facts evidence proof lab leak zdf source prove leak", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "science scientists scientific discussion rbb orf politics forward discussion look forward forward", "label": "science scientists scientific discussion rbb orf politics forward discussion look forward forward", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "late smoking thumbs driving werner digital mrs worry compassion satanic", "label": "late smoking thumbs driving werner digital mrs worry compassion satanic", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "easter wish happy easter happy christians blessed blessed easter resurrection merry easter christ", "label": "easter wish happy easter happy christians blessed blessed easter resurrection merry easter christ", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "ai blocked artificial intelligence artificial intelligence bad blocking prompt engineering prompt engineering", "label": "ai blocked artificial intelligence artificial intelligence bad blocking prompt engineering prompt engineering", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "birthday happy birthday birthday birthday birthday today happy congratulations born today dear birthday dear", "label": "birthday happy birthday birthday birthday birthday today happy congratulations born today dear birthday dear", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "know know spd know party 160 years 160 democracy social form government government", "label": "know know spd know party 160 years 160 democracy social form government government", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "case team reading strong team back come back love come great team decision good choice", "label": "case team reading strong team back come back love come great team decision good choice", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "habeck robert habeck graichen robert minister mr habeck green economy secretary state secretary", "label": "habeck robert habeck graichen robert minister mr habeck green economy secretary state secretary", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "ordered order publisher mistake accounts elon account horny fake going get", "label": "ordered order publisher mistake accounts elon account horny fake going get", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "bundestag reform electoral mandates seats electoral reform election right vote mps size", "label": "bundestag reform electoral mandates seats electoral reform election right vote mps size", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "protest violence demonstrations protests peaceful protesters police resistance uprising violence violence", "label": "protest violence demonstrations protests peaceful protesters police resistance uprising violence violence", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "ok ok ok congratulations congratulations good good luck luck luck congratulations colleague dear good", "label": "ok ok ok congratulations congratulations good good luck luck luck congratulations colleague dear good", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "cannabis legalization legalization cannabis cannabis legalization drug black market legalized cultivation legalizing cannabis controlled release", "label": "cannabis legalization legalization cannabis cannabis legalization drug black market legalized cultivation legalizing cannabis controlled release", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "taliban afghanistan afghan women girls women afghanistan afghans afghan women woman islamist", "label": "taliban afghanistan afghan women girls women afghanistan afghans afghan women woman islamist", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "herefrom herefrom herefrom fdp fdp unk unk fdp fdp fdp unk unk fick fick decision", "label": "herefrom herefrom herefrom fdp fdp unk unk fdp fdp fdp unk unk fick fick decision", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "right right ready much going sure right going anywhere anywhere please fight guy gonna please", "label": "right right ready much going sure right going anywhere anywhere please fight guy gonna please", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "union unions union union trade unions unions union union sorry union also union interest merz years union", "label": "union unions union union trade unions unions union union sorry union also union interest merz years union", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "ticket euro ticket euro 9euroticket nine euro nine transport driving train railway", "label": "ticket euro ticket euro 9euroticket nine euro nine transport driving train railway", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "church thank rapporteur rapporteur report rapporteur trans like thank report also like would also like", "label": "church thank rapporteur rapporteur report rapporteur trans like thank report also like would also like", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "ampel ampel coalition coalition coalition agreement agreement ampelcoalition federal coalition committee german ports committee", "label": "ampel ampel coalition coalition coalition agreement agreement ampelcoalition federal coalition committee german ports committee", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "kosovo serbia balkans western balkans eu western bosnia accession herzegovina bosnia herzegovina", "label": "kosovo serbia balkans western balkans eu western bosnia accession herzegovina bosnia herzegovina", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "study scientific studies results match different moving biology look closely 1x", "label": "study scientific studies results match different moving biology look closely 1x", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "steinmeier frank walter frank walter steinmeier federal president walter president federal assembly federal assembly", "label": "steinmeier frank walter frank walter steinmeier federal president walter president federal assembly federal assembly", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "way gay way way computer says yeah abrahamaccords bahrain uae dating fatal", "label": "way gay way way computer says yeah abrahamaccords bahrain uae dating fatal", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "chat chat control control chat controls surveillance eu controls encryption controls nothing fundamental rights", "label": "chat chat control control chat controls surveillance eu controls encryption controls nothing fundamental rights", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "criticism criticized criticize self xi seriously rightly criticized critical self criticism hate", "label": "criticism criticized criticize self xi seriously rightly criticized critical self criticism hate", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "pleased meet meet pleased congratulations heart thank trust dear congratulations much trust meet thank", "label": "pleased meet meet pleased congratulations heart thank trust dear congratulations much trust meet thank", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "afraid scared worried worry okay careful afraid looks little scared even look fear", "label": "afraid scared worried worry okay careful afraid looks little scared even look fear", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "speech speeches whole speech great speech listen direct candidate hear ltwmv2021 youtube find candidate ltwmv2021", "label": "speech speeches whole speech great speech listen direct candidate hear ltwmv2021 youtube find candidate ltwmv2021", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "let go let go go let glad hear hear right seriously hear thank still", "label": "let go let go go let glad hear hear right seriously hear thank still", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "turkey erdogan turkish elections presidential election opposition hdp show erdo\u011fan", "label": "turkey erdogan turkish elections presidential election opposition hdp show erdo\u011fan", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "finland nato sweden accession finland sweden sweden finland nato membership alliance membership turkey", "label": "finland nato sweden accession finland sweden sweden finland nato membership alliance membership turkey", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "media time short short time short public journalists broadcasting public broadcasting time public law", "label": "media time short short time short public journalists broadcasting public broadcasting time public law", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "trade free trade ceta free trade agreement ratification agreement tax ratified canada", "label": "trade free trade ceta free trade agreement ratification agreement tax ratified canada", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "embarrassing afraid true embarrassed afraid true envy embarrassing embarrassing embarrassing afraid worlds give best", "label": "embarrassing afraid true embarrassed afraid true envy embarrassing embarrassing embarrassing afraid worlds give best", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "live stream broadcast live stream 00 tv 11 watch watch live guest", "label": "live stream broadcast live stream 00 tv 11 watch watch live guest", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "environment protection environment proposal commission directive protection commission proposal directive protection adopted environment environment", "label": "environment protection environment proposal commission directive protection commission proposal directive protection adopted environment environment", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "climate germany climate protection protection german germany climate water co2 2022 2045", "label": "climate germany climate protection protection german germany climate water co2 2022 2045", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "switzerland swiss relations eu gdp french zurich previous year bilateral previous", "label": "switzerland swiss relations eu gdp french zurich previous year bilateral previous", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "brussels unk unk bosnia herzegovina herzegovina unk eu bosnia bayern meeting delegation", "label": "brussels unk unk bosnia herzegovina herzegovina unk eu bosnia bayern meeting delegation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "democracy unk unk democratic social democracy democracy also democracy must democracies dictatorship direct democracy democracy even", "label": "democracy unk unk democratic social democracy democracy also democracy must democracies dictatorship direct democracy democracy even", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "thank rapporteur rapporteur like thank rapporteur report report would like excellent report rapporteur excellent report would thank", "label": "thank rapporteur rapporteur like thank rapporteur report report would like excellent report rapporteur excellent report would thank", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "nuclear nuclear power power france french electricity eu energy reactors eu commission", "label": "nuclear nuclear power power france french electricity eu energy reactors eu commission", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "housing berlin rent rental lease 000 apartments social housing affordable tenants", "label": "housing berlin rent rental lease 000 apartments social housing affordable tenants", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "conspiracy conspiracy theory conspiracy theories theory theories press release press release conspiracy theorists theorists", "label": "conspiracy conspiracy theory conspiracy theories theory theories press release press release conspiracy theorists theorists", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "spd russia nordstream2 nordstream nord stream stream nord russian spd russia ukraine", "label": "spd russia nordstream2 nordstream nord stream stream nord russian spd russia ukraine", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "strike right strike wages strikes workers strikers solidarity colleagues employees tariff", "label": "strike right strike wages strikes workers strikers solidarity colleagues employees tariff", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "wind wind power power wind turbines turbines wind energy wind farm wind farms farm energy", "label": "wind wind power power wind turbines turbines wind energy wind farm wind farms farm energy", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "back right back back take back right take right know going going going get clear", "label": "back right back back take back right take right know going going going get clear", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "press freedom press freedom press freedom journalists media free journalism democracy free press", "label": "press freedom press freedom press freedom journalists media free journalism democracy free press", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "lukashenko switzerland swiss zurich october kogler kogler october kogler coalition coalition kurz kurz schallenberg", "label": "lukashenko switzerland swiss zurich october kogler kogler october kogler coalition coalition kurz kurz schallenberg", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "bulb light light bulb lamp measures end karlsruhe leisure sure lamp bulb becoming", "label": "bulb light light bulb lamp measures end karlsruhe leisure sure lamp bulb becoming", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "sausage beer drinks sausages roasted chicken pizza roast belly coffee", "label": "sausage beer drinks sausages roasted chicken pizza roast belly coffee", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "thank team great congratulations thank much colleagues honor like thank team thank much", "label": "thank team great congratulations thank much colleagues honor like thank team thank much", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "important important important important right right important obvious important identified pressing planning firmly typical right typical important even", "label": "important important important important right right important obvious important identified pressing planning firmly typical right typical important even", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "opinion crazy game opinions game crazy minutes greeting round unpopular five minutes people", "label": "opinion crazy game opinions game crazy minutes greeting round unpopular five minutes people", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "pcr test pcr test movie positive tests blood pcr tests film animal testing", "label": "pcr test pcr test movie positive tests blood pcr tests film animal testing", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "inheritance tax inheritance tax estate tax property heirs estate allowances money pay", "label": "inheritance tax inheritance tax estate tax property heirs estate allowances money pay", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "know oh god god oh know oh got know got whoa know know exactly feel", "label": "know oh god god oh know oh got know got whoa know know exactly feel", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "left right side left left right left far right left right choose left never left left first", "label": "left right side left left right left far right left right choose left never left left first", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "see later later see later see see soon see around see next soon targeting later congratulations", "label": "see later later see later see see soon see around see next soon targeting later congratulations", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "supply chain chain chain law supply innovation eu supply law ai research eu", "label": "supply chain chain chain law supply innovation eu supply law ai research eu", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "refugees migration refugee integration immigration social asylum municipalities ampel summit", "label": "refugees migration refugee integration immigration social asylum municipalities ampel summit", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "spd spd always spd better equally affected roderich kiesewetter roderich doping better spd kiesewetter way spd", "label": "spd spd always spd better equally affected roderich kiesewetter roderich doping better spd kiesewetter way spd", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "electric electric cars cars electric car charging car vehicles electricity battery powered", "label": "electric electric cars cars electric car charging car vehicles electricity battery powered", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "discussion talk need talk worse better getting better getting want talk badly aged discussion discussion", "label": "discussion talk need talk worse better getting better getting want talk badly aged discussion discussion", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "technology openness technology openness innovation spd climate protection climate ecology supply affordability law", "label": "technology openness technology openness innovation spd climate protection climate ecology supply affordability law", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "spd cdu berlin cdu spd cdu berlin berlin spd coalition wegner spd berlin coalition cdu", "label": "spd cdu berlin cdu spd cdu berlin berlin spd coalition wegner spd berlin coalition cdu", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "brazil clause mandate clause mediterranean rescue mandate bolsonaro basic mandate lula dying mediterranean", "label": "brazil clause mandate clause mediterranean rescue mandate bolsonaro basic mandate lula dying mediterranean", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "food agriculture agricultural germany farmers food supply production agricultural policy food prices supply", "label": "food agriculture agricultural germany farmers food supply production agricultural policy food prices supply", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "lambrecht defence mrs minister defence minister minister lambrecht mrs lambrecht christine lambrecht sahra minister defence", "label": "lambrecht defence mrs minister defence minister minister lambrecht mrs lambrecht christine lambrecht sahra minister defence", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "advent first advent wish thoughtful advent unk christmas beautiful fourth advent second advent advent wish", "label": "advent first advent wish thoughtful advent unk christmas beautiful fourth advent second advent advent wish", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "security germany security strategy national security strategy resilient migrants refugees polish german", "label": "security germany security strategy national security strategy resilient migrants refugees polish german", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "saxony lower saxony lower sk offshore ice structural change saxony one cooperation structural hammelburg", "label": "saxony lower saxony lower sk offshore ice structural change saxony one cooperation structural hammelburg", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "medicines drug pharmaceutical drugs pharma shortages drug shortages pharmaceutical industry pharma lobbyist lobbyist", "label": "medicines drug pharmaceutical drugs pharma shortages drug shortages pharmaceutical industry pharma lobbyist lobbyist", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "ilmenau pharmacy fountain address gotha fountain morning pharmacy yes please ilmenau pharmacy gotha new", "label": "ilmenau pharmacy fountain address gotha fountain morning pharmacy yes please ilmenau pharmacy gotha new", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "lobbying lobbyists lobby lobby groups warning unk survival housing lobby getting circle lobbyist would fly", "label": "lobbying lobbyists lobby lobby groups warning unk survival housing lobby getting circle lobbyist would fly", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "wage minimum wage minimum wage 12 12 12 euros euros raise minimum raise million people", "label": "wage minimum wage minimum wage 12 12 12 euros euros raise minimum raise million people", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "advertising ban bakers bread 13 2020 infected ban advertising infected people consumption 2020", "label": "advertising ban bakers bread 13 2020 infected ban advertising infected people consumption 2020", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "cake baked smell cow lice milk breast queer bonn bear lice", "label": "cake baked smell cow lice milk breast queer bonn bear lice", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "yes yes yes really put yes going yes finally yeah going yes odds ship put", "label": "yes yes yes really put yes going yes finally yeah going yes odds ship put", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "fool talk easy big companies understand problem phone understand course possible theory dream", "label": "fool talk easy big companies understand problem phone understand course possible theory dream", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "satire satire satire satirical fever reducing supposed satire satire allowed medicines humor fever printed photographed", "label": "satire satire satire satirical fever reducing supposed satire satire allowed medicines humor fever printed photographed", "shape": "dot", "size": 10}]);
+                  edges = new vis.DataSet([]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

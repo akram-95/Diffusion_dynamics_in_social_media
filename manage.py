@@ -47,7 +47,7 @@ fields_reply = [
 fields_quote = [
     "id",
     "user_id",
-    "in_reply_to_tweet_id",
+    "quoted_tweet_id",
     "date",
     "text",
     "lang",
@@ -92,10 +92,9 @@ def main():
 
 if __name__ == '__main__':
     """
-
-    with gzip.open(f"{INDEX_REPLIES}.jsonl.gz", "wt") as f:
+    with gzip.open(f"{INDEX_QUOTE}.jsonl.gz", "wt") as f:
         for hit in tqdm(scan(
-                es, index=INDEX_REPLIES, size=10000, query={**q, "_source": fields_reply, "sort": ["_doc"]}
+                es, index=INDEX_QUOTE, size=10000, query={**q, "_source": fields_quote, "sort": ["_doc"]}
         )):
             f.write(json.dumps(hit["_source"]) + "\n")
             
