@@ -11,13 +11,18 @@ from elasticsearch import Elasticsearch
 
 from api import utils
 from api.services import ApiService
+from dotenv import load_dotenv
 
 # from api.services import ApiService
 # from api.utils import parse_json
+load_dotenv()
+elascticsearch_url = os.getenv("elascticsearch_url")
+username = os.getenv("username")
+password = os.getenv("password")
 
 es = Elasticsearch(
-    "http://hadoop3.kbs.uni-hannover.de:9300",
-    basic_auth=("akram.chorfi", "yi6riaNeijiyiephoo5r"),
+    elascticsearch_url,
+    basic_auth=(username, password),
     request_timeout=30,
     retry_on_timeout=True,
 )
@@ -102,6 +107,6 @@ if __name__ == '__main__':
     """
 
     # print(utils.calculate_cosine_sim("I love horror movies", "Lights out is a horror movie"))
-    ApiService().extract_topics_with_represented_docs()
+    # ApiService().extract_topics_with_represented_docs()
 
     main()
