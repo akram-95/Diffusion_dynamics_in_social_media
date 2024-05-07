@@ -107,6 +107,6 @@ if __name__ == '__main__':
     """
 
     # print(utils.calculate_cosine_sim("I love horror movies", "Lights out is a horror movie"))
-    # ApiService().extract_topics_with_represented_docs()
+    ApiService().find_topics_evolution_and_popularity()
 
     main()
