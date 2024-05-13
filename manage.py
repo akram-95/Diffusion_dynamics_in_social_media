@@ -10,6 +10,7 @@ from elasticsearch.helpers import scan
 from elasticsearch import Elasticsearch
 
 from api import utils
+from api.TopicInteractionAnalyzer import TopicInteractionAnalyzer
 from api.services import ApiService
 from dotenv import load_dotenv
 
@@ -97,16 +98,15 @@ def main():
 
 if __name__ == '__main__':
     """
-    with gzip.open(f"{INDEX_QUOTE}.jsonl.gz", "wt") as f:
+    with gzip.open(f"{INDEX_REPLIES}.jsonl.gz", "wt") as f:
         for hit in tqdm(scan(
-                es, index=INDEX_QUOTE, size=10000, query={**q, "_source": fields_quote, "sort": ["_doc"]}
+                es, index=INDEX_REPLIES, size=10000, query={**q, "_source": fields_reply, "sort": ["_doc"]}
         )):
             f.write(json.dumps(hit["_source"]) + "\n")
-            
             
     """
 
     # print(utils.calculate_cosine_sim("I love horror movies", "Lights out is a horror movie"))
-    ApiService().find_topics_evolution_and_popularity()
+    TopicInteractionAnalyzer().find_topics_interaction_evolution_overtime()
 
     main()

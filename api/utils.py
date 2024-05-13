@@ -15,8 +15,8 @@ cos_sim = lambda x, y: dot(x, y) / (norm(x) * norm(y))
 
 def parse_json(filepath):
     data = []
-    with open(filepath, "r") as f:
-        for line in f:
+    for line in open(filepath, "r"):
+        if 'translation2' in line:
             data.append(json.loads(line))
     return data
 
