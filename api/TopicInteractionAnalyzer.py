@@ -57,9 +57,9 @@ stopwords1 = list(stopwords.words('english')) + ['http', 'https', 'amp', 'com']
 # we add this to remove stopwords that can pollute topcs
 vectorizer_model = CountVectorizer(ngram_range=(1, 2), stop_words=stopwords1)
 
-tweets_parsed = parse_json('twitter-politics-tweets.jsonl')[0:10000]
+tweets_parsed = parse_json('twitter-politics-tweets.jsonl')[0:100000]
 
-replies_parsed = parse_json('twitter-politics-tweets_reply.jsonl')[0:50000]
+replies_parsed = parse_json('twitter-politics-tweets_reply.jsonl')
 quotes_parsed = parse_json('twitter-politics-tweets_quote.jsonl')
 
 # Convert lists of dictionaries into DataFrames
