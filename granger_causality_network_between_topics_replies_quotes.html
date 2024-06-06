@@ -1,0 +1,163 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 750px;
+                 background-color: #222222;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_2", "label": "tweets_2", "shape": "dot", "size": 10, "title": "tweets_2"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_2", "label": "replies_quotes_2", "shape": "dot", "size": 10, "title": "replies_quotes_2"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_11", "label": "tweets_11", "shape": "dot", "size": 10, "title": "tweets_11"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_11", "label": "replies_quotes_11", "shape": "dot", "size": 10, "title": "replies_quotes_11"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_13", "label": "tweets_13", "shape": "dot", "size": 10, "title": "tweets_13"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_13", "label": "replies_quotes_13", "shape": "dot", "size": 10, "title": "replies_quotes_13"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_15", "label": "tweets_15", "shape": "dot", "size": 10, "title": "tweets_15"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_15", "label": "replies_quotes_15", "shape": "dot", "size": 10, "title": "replies_quotes_15"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_19", "label": "tweets_19", "shape": "dot", "size": 10, "title": "tweets_19"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_19", "label": "replies_quotes_19", "shape": "dot", "size": 10, "title": "replies_quotes_19"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_22", "label": "tweets_22", "shape": "dot", "size": 10, "title": "tweets_22"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_22", "label": "replies_quotes_22", "shape": "dot", "size": 10, "title": "replies_quotes_22"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_29", "label": "tweets_29", "shape": "dot", "size": 10, "title": "tweets_29"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_29", "label": "replies_quotes_29", "shape": "dot", "size": 10, "title": "replies_quotes_29"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_32", "label": "tweets_32", "shape": "dot", "size": 10, "title": "tweets_32"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_32", "label": "replies_quotes_32", "shape": "dot", "size": 10, "title": "replies_quotes_32"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_36", "label": "replies_quotes_36", "shape": "dot", "size": 10, "title": "replies_quotes_36"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_36", "label": "tweets_36", "shape": "dot", "size": 10, "title": "tweets_36"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_37", "label": "replies_quotes_37", "shape": "dot", "size": 10, "title": "replies_quotes_37"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_37", "label": "tweets_37", "shape": "dot", "size": 10, "title": "tweets_37"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_42", "label": "tweets_42", "shape": "dot", "size": 10, "title": "tweets_42"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_42", "label": "replies_quotes_42", "shape": "dot", "size": 10, "title": "replies_quotes_42"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_44", "label": "tweets_44", "shape": "dot", "size": 10, "title": "tweets_44"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_44", "label": "replies_quotes_44", "shape": "dot", "size": 10, "title": "replies_quotes_44"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_45", "label": "tweets_45", "shape": "dot", "size": 10, "title": "tweets_45"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_45", "label": "replies_quotes_45", "shape": "dot", "size": 10, "title": "replies_quotes_45"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_46", "label": "tweets_46", "shape": "dot", "size": 10, "title": "tweets_46"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_46", "label": "replies_quotes_46", "shape": "dot", "size": 10, "title": "replies_quotes_46"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_51", "label": "tweets_51", "shape": "dot", "size": 10, "title": "tweets_51"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_51", "label": "replies_quotes_51", "shape": "dot", "size": 10, "title": "replies_quotes_51"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_54", "label": "tweets_54", "shape": "dot", "size": 10, "title": "tweets_54"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_54", "label": "replies_quotes_54", "shape": "dot", "size": 10, "title": "replies_quotes_54"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_58", "label": "tweets_58", "shape": "dot", "size": 10, "title": "tweets_58"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_58", "label": "replies_quotes_58", "shape": "dot", "size": 10, "title": "replies_quotes_58"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_62", "label": "replies_quotes_62", "shape": "dot", "size": 10, "title": "replies_quotes_62"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_62", "label": "tweets_62", "shape": "dot", "size": 10, "title": "tweets_62"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_63", "label": "tweets_63", "shape": "dot", "size": 10, "title": "tweets_63"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_63", "label": "replies_quotes_63", "shape": "dot", "size": 10, "title": "replies_quotes_63"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_66", "label": "tweets_66", "shape": "dot", "size": 10, "title": "tweets_66"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_66", "label": "replies_quotes_66", "shape": "dot", "size": 10, "title": "replies_quotes_66"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_67", "label": "replies_quotes_67", "shape": "dot", "size": 10, "title": "replies_quotes_67"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_67", "label": "tweets_67", "shape": "dot", "size": 10, "title": "tweets_67"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_84", "label": "tweets_84", "shape": "dot", "size": 10, "title": "tweets_84"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_84", "label": "replies_quotes_84", "shape": "dot", "size": 10, "title": "replies_quotes_84"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_86", "label": "tweets_86", "shape": "dot", "size": 10, "title": "tweets_86"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_86", "label": "replies_quotes_86", "shape": "dot", "size": 10, "title": "replies_quotes_86"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_87", "label": "tweets_87", "shape": "dot", "size": 10, "title": "tweets_87"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_87", "label": "replies_quotes_87", "shape": "dot", "size": 10, "title": "replies_quotes_87"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_90", "label": "replies_quotes_90", "shape": "dot", "size": 10, "title": "replies_quotes_90"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_90", "label": "tweets_90", "shape": "dot", "size": 10, "title": "tweets_90"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_91", "label": "tweets_91", "shape": "dot", "size": 10, "title": "tweets_91"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_91", "label": "replies_quotes_91", "shape": "dot", "size": 10, "title": "replies_quotes_91"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_96", "label": "tweets_96", "shape": "dot", "size": 10, "title": "tweets_96"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_96", "label": "replies_quotes_96", "shape": "dot", "size": 10, "title": "replies_quotes_96"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_98", "label": "tweets_98", "shape": "dot", "size": 10, "title": "tweets_98"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_98", "label": "replies_quotes_98", "shape": "dot", "size": 10, "title": "replies_quotes_98"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_111", "label": "tweets_111", "shape": "dot", "size": 10, "title": "tweets_111"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_111", "label": "replies_quotes_111", "shape": "dot", "size": 10, "title": "replies_quotes_111"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_113", "label": "tweets_113", "shape": "dot", "size": 10, "title": "tweets_113"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_113", "label": "replies_quotes_113", "shape": "dot", "size": 10, "title": "replies_quotes_113"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_118", "label": "tweets_118", "shape": "dot", "size": 10, "title": "tweets_118"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_118", "label": "replies_quotes_118", "shape": "dot", "size": 10, "title": "replies_quotes_118"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_122", "label": "tweets_122", "shape": "dot", "size": 10, "title": "tweets_122"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_122", "label": "replies_quotes_122", "shape": "dot", "size": 10, "title": "replies_quotes_122"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_124", "label": "replies_quotes_124", "shape": "dot", "size": 10, "title": "replies_quotes_124"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_124", "label": "tweets_124", "shape": "dot", "size": 10, "title": "tweets_124"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_125", "label": "tweets_125", "shape": "dot", "size": 10, "title": "tweets_125"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_125", "label": "replies_quotes_125", "shape": "dot", "size": 10, "title": "replies_quotes_125"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_128", "label": "tweets_128", "shape": "dot", "size": 10, "title": "tweets_128"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_128", "label": "replies_quotes_128", "shape": "dot", "size": 10, "title": "replies_quotes_128"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_135", "label": "tweets_135", "shape": "dot", "size": 10, "title": "tweets_135"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_135", "label": "replies_quotes_135", "shape": "dot", "size": 10, "title": "replies_quotes_135"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_137", "label": "replies_quotes_137", "shape": "dot", "size": 10, "title": "replies_quotes_137"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_137", "label": "tweets_137", "shape": "dot", "size": 10, "title": "tweets_137"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_138", "label": "tweets_138", "shape": "dot", "size": 10, "title": "tweets_138"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_138", "label": "replies_quotes_138", "shape": "dot", "size": 10, "title": "replies_quotes_138"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_150", "label": "tweets_150", "shape": "dot", "size": 10, "title": "tweets_150"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_150", "label": "replies_quotes_150", "shape": "dot", "size": 10, "title": "replies_quotes_150"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_151", "label": "tweets_151", "shape": "dot", "size": 10, "title": "tweets_151"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_151", "label": "replies_quotes_151", "shape": "dot", "size": 10, "title": "replies_quotes_151"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_153", "label": "replies_quotes_153", "shape": "dot", "size": 10, "title": "replies_quotes_153"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_153", "label": "tweets_153", "shape": "dot", "size": 10, "title": "tweets_153"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_163", "label": "tweets_163", "shape": "dot", "size": 10, "title": "tweets_163"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_163", "label": "replies_quotes_163", "shape": "dot", "size": 10, "title": "replies_quotes_163"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_164", "label": "replies_quotes_164", "shape": "dot", "size": 10, "title": "replies_quotes_164"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_164", "label": "tweets_164", "shape": "dot", "size": 10, "title": "tweets_164"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_167", "label": "tweets_167", "shape": "dot", "size": 10, "title": "tweets_167"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_167", "label": "replies_quotes_167", "shape": "dot", "size": 10, "title": "replies_quotes_167"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_171", "label": "replies_quotes_171", "shape": "dot", "size": 10, "title": "replies_quotes_171"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_171", "label": "tweets_171", "shape": "dot", "size": 10, "title": "tweets_171"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_173", "label": "replies_quotes_173", "shape": "dot", "size": 10, "title": "replies_quotes_173"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_173", "label": "tweets_173", "shape": "dot", "size": 10, "title": "tweets_173"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_176", "label": "replies_quotes_176", "shape": "dot", "size": 10, "title": "replies_quotes_176"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_176", "label": "tweets_176", "shape": "dot", "size": 10, "title": "tweets_176"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tweets_185", "label": "tweets_185", "shape": "dot", "size": 10, "title": "tweets_185"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "replies_quotes_185", "label": "replies_quotes_185", "shape": "dot", "size": 10, "title": "replies_quotes_185"}]);
+                  edges = new vis.DataSet([{"arrows": "to", "color": "red", "from": "tweets_2", "title": "tweets_2-\u003ereplies_quotes_2 Weight: 0.9865", "to": "replies_quotes_2", "value": 0.9865, "width": 6.9325}, {"arrows": "to", "color": "red", "from": "tweets_11", "title": "tweets_11-\u003ereplies_quotes_11 Weight: 0.9686", "to": "replies_quotes_11", "value": 0.9686, "width": 6.843}, {"arrows": "to", "color": "red", "from": "tweets_13", "title": "tweets_13-\u003ereplies_quotes_13 Weight: 0.9755", "to": "replies_quotes_13", "value": 0.9755, "width": 6.8775}, {"arrows": "to", "color": "red", "from": "tweets_15", "title": "tweets_15-\u003ereplies_quotes_15 Weight: 0.9931", "to": "replies_quotes_15", "value": 0.9931, "width": 6.9655}, {"arrows": "to", "color": "orange", "from": "replies_quotes_15", "title": "replies_quotes_15-\u003etweets_15 Weight: 0.9806", "to": "tweets_15", "value": 0.9806, "width": 6.9030000000000005}, {"arrows": "to", "color": "red", "from": "tweets_19", "title": "tweets_19-\u003ereplies_quotes_19 Weight: 0.9792", "to": "replies_quotes_19", "value": 0.9792, "width": 6.896}, {"arrows": "to", "color": "red", "from": "tweets_22", "title": "tweets_22-\u003ereplies_quotes_22 Weight: 0.9706", "to": "replies_quotes_22", "value": 0.9706, "width": 6.853}, {"arrows": "to", "color": "red", "from": "tweets_29", "title": "tweets_29-\u003ereplies_quotes_29 Weight: 0.9608", "to": "replies_quotes_29", "value": 0.9608, "width": 6.804}, {"arrows": "to", "color": "red", "from": "tweets_32", "title": "tweets_32-\u003ereplies_quotes_32 Weight: 0.9851", "to": "replies_quotes_32", "value": 0.9851, "width": 6.9254999999999995}, {"arrows": "to", "color": "orange", "from": "replies_quotes_36", "title": "replies_quotes_36-\u003etweets_36 Weight: 0.9989", "to": "tweets_36", "value": 0.9989, "width": 6.9945}, {"arrows": "to", "color": "orange", "from": "replies_quotes_37", "title": "replies_quotes_37-\u003etweets_37 Weight: 0.9998", "to": "tweets_37", "value": 0.9998, "width": 6.9990000000000006}, {"arrows": "to", "color": "red", "from": "tweets_42", "title": "tweets_42-\u003ereplies_quotes_42 Weight: 0.9969", "to": "replies_quotes_42", "value": 0.9969, "width": 6.9845}, {"arrows": "to", "color": "orange", "from": "replies_quotes_42", "title": "replies_quotes_42-\u003etweets_42 Weight: 0.9749", "to": "tweets_42", "value": 0.9749, "width": 6.8745}, {"arrows": "to", "color": "red", "from": "tweets_44", "title": "tweets_44-\u003ereplies_quotes_44 Weight: 0.9940", "to": "replies_quotes_44", "value": 0.994, "width": 6.97}, {"arrows": "to", "color": "red", "from": "tweets_45", "title": "tweets_45-\u003ereplies_quotes_45 Weight: 0.9988", "to": "replies_quotes_45", "value": 0.9988, "width": 6.994}, {"arrows": "to", "color": "red", "from": "tweets_46", "title": "tweets_46-\u003ereplies_quotes_46 Weight: 0.9705", "to": "replies_quotes_46", "value": 0.9705, "width": 6.8525}, {"arrows": "to", "color": "orange", "from": "replies_quotes_46", "title": "replies_quotes_46-\u003etweets_46 Weight: 0.9665", "to": "tweets_46", "value": 0.9665, "width": 6.8325000000000005}, {"arrows": "to", "color": "red", "from": "tweets_51", "title": "tweets_51-\u003ereplies_quotes_51 Weight: 0.9535", "to": "replies_quotes_51", "value": 0.9535, "width": 6.7675}, {"arrows": "to", "color": "red", "from": "tweets_54", "title": "tweets_54-\u003ereplies_quotes_54 Weight: 0.9969", "to": "replies_quotes_54", "value": 0.9969, "width": 6.9845}, {"arrows": "to", "color": "red", "from": "tweets_58", "title": "tweets_58-\u003ereplies_quotes_58 Weight: 0.9896", "to": "replies_quotes_58", "value": 0.9896, "width": 6.948}, {"arrows": "to", "color": "orange", "from": "replies_quotes_62", "title": "replies_quotes_62-\u003etweets_62 Weight: 0.9858", "to": "tweets_62", "value": 0.9858, "width": 6.929}, {"arrows": "to", "color": "red", "from": "tweets_63", "title": "tweets_63-\u003ereplies_quotes_63 Weight: 0.9916", "to": "replies_quotes_63", "value": 0.9916, "width": 6.958}, {"arrows": "to", "color": "red", "from": "tweets_66", "title": "tweets_66-\u003ereplies_quotes_66 Weight: 0.9700", "to": "replies_quotes_66", "value": 0.97, "width": 6.85}, {"arrows": "to", "color": "orange", "from": "replies_quotes_67", "title": "replies_quotes_67-\u003etweets_67 Weight: 0.9973", "to": "tweets_67", "value": 0.9973, "width": 6.9864999999999995}, {"arrows": "to", "color": "red", "from": "tweets_84", "title": "tweets_84-\u003ereplies_quotes_84 Weight: 0.9673", "to": "replies_quotes_84", "value": 0.9673, "width": 6.8365}, {"arrows": "to", "color": "red", "from": "tweets_86", "title": "tweets_86-\u003ereplies_quotes_86 Weight: 0.9523", "to": "replies_quotes_86", "value": 0.9523, "width": 6.7615}, {"arrows": "to", "color": "red", "from": "tweets_87", "title": "tweets_87-\u003ereplies_quotes_87 Weight: 0.9998", "to": "replies_quotes_87", "value": 0.9998, "width": 6.9990000000000006}, {"arrows": "to", "color": "orange", "from": "replies_quotes_90", "title": "replies_quotes_90-\u003etweets_90 Weight: 0.9744", "to": "tweets_90", "value": 0.9744, "width": 6.872}, {"arrows": "to", "color": "red", "from": "tweets_91", "title": "tweets_91-\u003ereplies_quotes_91 Weight: 0.9691", "to": "replies_quotes_91", "value": 0.9691, "width": 6.8454999999999995}, {"arrows": "to", "color": "red", "from": "tweets_96", "title": "tweets_96-\u003ereplies_quotes_96 Weight: 0.9696", "to": "replies_quotes_96", "value": 0.9696, "width": 6.848}, {"arrows": "to", "color": "red", "from": "tweets_98", "title": "tweets_98-\u003ereplies_quotes_98 Weight: 0.9695", "to": "replies_quotes_98", "value": 0.9695, "width": 6.8475}, {"arrows": "to", "color": "red", "from": "tweets_111", "title": "tweets_111-\u003ereplies_quotes_111 Weight: 0.9824", "to": "replies_quotes_111", "value": 0.9824, "width": 6.912}, {"arrows": "to", "color": "red", "from": "tweets_113", "title": "tweets_113-\u003ereplies_quotes_113 Weight: 0.9967", "to": "replies_quotes_113", "value": 0.9967, "width": 6.9835}, {"arrows": "to", "color": "red", "from": "tweets_118", "title": "tweets_118-\u003ereplies_quotes_118 Weight: 0.9564", "to": "replies_quotes_118", "value": 0.9564, "width": 6.782}, {"arrows": "to", "color": "red", "from": "tweets_122", "title": "tweets_122-\u003ereplies_quotes_122 Weight: 0.9909", "to": "replies_quotes_122", "value": 0.9909, "width": 6.9545}, {"arrows": "to", "color": "orange", "from": "replies_quotes_124", "title": "replies_quotes_124-\u003etweets_124 Weight: 0.9659", "to": "tweets_124", "value": 0.9659, "width": 6.8294999999999995}, {"arrows": "to", "color": "red", "from": "tweets_125", "title": "tweets_125-\u003ereplies_quotes_125 Weight: 0.9812", "to": "replies_quotes_125", "value": 0.9812, "width": 6.906}, {"arrows": "to", "color": "red", "from": "tweets_128", "title": "tweets_128-\u003ereplies_quotes_128 Weight: 0.9535", "to": "replies_quotes_128", "value": 0.9535, "width": 6.7675}, {"arrows": "to", "color": "red", "from": "tweets_135", "title": "tweets_135-\u003ereplies_quotes_135 Weight: 0.9662", "to": "replies_quotes_135", "value": 0.9662, "width": 6.8309999999999995}, {"arrows": "to", "color": "orange", "from": "replies_quotes_137", "title": "replies_quotes_137-\u003etweets_137 Weight: 0.9824", "to": "tweets_137", "value": 0.9824, "width": 6.912}, {"arrows": "to", "color": "red", "from": "tweets_138", "title": "tweets_138-\u003ereplies_quotes_138 Weight: 0.9887", "to": "replies_quotes_138", "value": 0.9887, "width": 6.9435}, {"arrows": "to", "color": "red", "from": "tweets_150", "title": "tweets_150-\u003ereplies_quotes_150 Weight: 0.9972", "to": "replies_quotes_150", "value": 0.9972, "width": 6.986}, {"arrows": "to", "color": "red", "from": "tweets_151", "title": "tweets_151-\u003ereplies_quotes_151 Weight: 0.9539", "to": "replies_quotes_151", "value": 0.9539, "width": 6.7695}, {"arrows": "to", "color": "orange", "from": "replies_quotes_153", "title": "replies_quotes_153-\u003etweets_153 Weight: 0.9793", "to": "tweets_153", "value": 0.9793, "width": 6.8965}, {"arrows": "to", "color": "red", "from": "tweets_163", "title": "tweets_163-\u003ereplies_quotes_163 Weight: 0.9911", "to": "replies_quotes_163", "value": 0.9911, "width": 6.9555}, {"arrows": "to", "color": "orange", "from": "replies_quotes_164", "title": "replies_quotes_164-\u003etweets_164 Weight: 0.9684", "to": "tweets_164", "value": 0.9684, "width": 6.8420000000000005}, {"arrows": "to", "color": "red", "from": "tweets_167", "title": "tweets_167-\u003ereplies_quotes_167 Weight: 0.9999", "to": "replies_quotes_167", "value": 0.9999, "width": 6.9995}, {"arrows": "to", "color": "orange", "from": "replies_quotes_171", "title": "replies_quotes_171-\u003etweets_171 Weight: 0.9546", "to": "tweets_171", "value": 0.9546, "width": 6.773}, {"arrows": "to", "color": "orange", "from": "replies_quotes_173", "title": "replies_quotes_173-\u003etweets_173 Weight: 0.9672", "to": "tweets_173", "value": 0.9672, "width": 6.835999999999999}, {"arrows": "to", "color": "orange", "from": "replies_quotes_176", "title": "replies_quotes_176-\u003etweets_176 Weight: 0.9873", "to": "tweets_176", "value": 0.9873, "width": 6.9365}, {"arrows": "to", "color": "red", "from": "tweets_185", "title": "tweets_185-\u003ereplies_quotes_185 Weight: 0.9892", "to": "replies_quotes_185", "value": 0.9892, "width": 6.946}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "repulsion": {
+            "centralGravity": 0.3,
+            "damping": 0.09,
+            "nodeDistance": 200,
+            "springConstant": 0.05,
+            "springLength": 100
+        },
+        "solver": "repulsion",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
